@@ -99,7 +99,7 @@ function ProjectCard({ repo, index: i, onSelect }: { repo: Repo; index: number; 
   const techTags = extractTechTags({ ...repo, description: localizedDescription, topics: localizedTopics });
   const langColor = repo.language ? LANG_COLORS[repo.language] || "var(--accent)" : "var(--accent)";
   const updated = repo.pushed_at
-    ? new Date(repo.pushed_at).toLocaleDateString("pt-BR", { month: "short", year: "2-digit" })
+    ? new Date(repo.pushed_at).toLocaleDateString("pt-BR", { month: "short", year: "2-digit", timeZone: "UTC" })
     : null;
   const gradient = repo.imageGradient || PROJECT_GRADIENTS[repo.name] || "linear-gradient(135deg, var(--accent) 0%, var(--accent-alt, #7c3aed) 100%)";
   const { track } = useAnalytics();
@@ -167,14 +167,25 @@ function ProjectCard({ repo, index: i, onSelect }: { repo: Repo; index: number; 
               }}
             />
             {repo.imageUrl ? (
-              <Image
-                src={repo.imageUrl}
-                alt={repo.description ? `${repo.name} — ${(localizedDescription || "").slice(0, 80)}` : repo.name}
-                fill
-                className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover/image:scale-110"
-                unoptimized
-                loading="lazy"
-              />
+              repo.videoUrl ? (
+                <video
+                  src={repo.videoUrl}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover/image:scale-110"
+                />
+              ) : (
+                <Image
+                  src={repo.imageUrl}
+                  alt={repo.description ? `${repo.name} — ${(localizedDescription || "").slice(0, 80)}` : repo.name}
+                  fill
+                  className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-500 group-hover/image:scale-110"
+                  unoptimized
+                  loading="lazy"
+                />
+              )
             ) : repo.icon ? (
               <span className="text-4xl relative z-10 drop-shadow-lg">{repo.icon}</span>
             ) : (
@@ -205,14 +216,25 @@ function ProjectCard({ repo, index: i, onSelect }: { repo: Repo; index: number; 
               }}
             />
             {repo.imageUrl ? (
-              <Image
-                src={repo.imageUrl}
-                alt={repo.description ? `${repo.name} — ${(localizedDescription || "").slice(0, 80)}` : repo.name}
-                fill
-                className="absolute inset-0 w-full h-full object-cover object-top"
-                unoptimized
-                loading="lazy"
-              />
+              repo.videoUrl ? (
+                <video
+                  src={repo.videoUrl}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover object-top"
+                />
+              ) : (
+                <Image
+                  src={repo.imageUrl}
+                  alt={repo.description ? `${repo.name} — ${(localizedDescription || "").slice(0, 80)}` : repo.name}
+                  fill
+                  className="absolute inset-0 w-full h-full object-cover object-top"
+                  unoptimized
+                  loading="lazy"
+                />
+              )
             ) : repo.icon ? (
               <span className="text-4xl relative z-10 drop-shadow-lg">{repo.icon}</span>
             ) : (
@@ -226,9 +248,9 @@ function ProjectCard({ repo, index: i, onSelect }: { repo: Repo; index: number; 
 
         <div className="relative p-1 flex flex-col flex-1">
           {/* Name (always visible now) */}
-          <p className="text-sm md:text-base font-mono font-semibold text-[var(--text-primary)] mb-1 truncate">
-            {repo.icon && repo.name}
-          </p>
+          <p className="text-base md:text-lg font-mono font-bold text-[var(--accent)] mb-1 truncate">
+                      {repo.icon ? `${repo.icon} ${repo.name}` : repo.name}
+                    </p>
 
           {/* Description */}
           <p className="text-sm text-[var(--text-secondary)] mb-3 line-clamp-3 md:line-clamp-2 flex-1 mt-1">

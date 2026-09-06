@@ -3,14 +3,72 @@
 ## 🎯 Identidade
 Portfólio profissional sci-fi · Next.js 16 + React 19 + Tailwind 4 · Painel de controle interativo com animações cinematográficas e 5 mini-games
 
+## 🔴 TEST-LOOP OBRIGATÓRIO ANTES DE QUALQUER ENTREGA (18/08 + v2 25/08/2026 — Samuel, GLOBAL)
+
+Regra permanente em TODOS os projetos. Antes de declarar pronta/fazer deploy de QUALQUER
+entrega (código, UI, pipeline, feature, fix), rodar SEMPRE o loop de testes com IA
+(skill `ai-test-loop`):
+
+1. **Builder = opencode CLI** (corrige gaps; NUNCA avalia o próprio trabalho — v2 25/08)
+2. **Testes reais** — unit + e2e + VRT do projeto (build, vitest, playwright, lint)
+3. **Critic determinístico separado** — nota 0-100 com evidência real, contexto fresco
+4. **Reviewer opencode** — CONCORDO|DISCORDO (DISCORDO = reabrir loop) + nota revisor no PDF
+5. **Evidência visual** — screenshots DESKTOP + MOBILE (Playwright/VLM), obrigatória para mudanças de visual
+6. **Vídeo de aprovação** = entregue ao FINAL (mensagem única no grupo), nunca no meio
+7. **Gate:** nota >= threshold (UI=100, código=85); nota < threshold → reavaliar e corrigir (máx 8 rodadas)
+8. **PDF relatório** SEMPRE anexado via MEDIA:<caminho> (ou sendDocument + message_id confirmado)
+
+**ADICIONAR TESTES DE COMPLEMENTO** — se dá pra cobrir área nova/regressão antes de entregar, cobrir.
+
+Sem evidência real (testes + screenshot + nota + PDF entregue) NÃO é entrega completa.
+
 ## 📍 Estado Atual
 - **Branch:** `master`
-- **Último commit:** `148feb7` — chore(deps): merge dependabot netlify-cli 27.1.1 (14/08)
-- **Status:** ✅ Funcional — produção em Vercel + self-host :3001 · CI 7/7 verde pós-merge
-- **Testes:** 268 passando
+- **Último commit:** `215acd5` — chore(csp): remove dead code img.seu.pet do img-src (same-origin consolidado) — **pusheado 30/08, produção validada**
+- **Status:** ✅ Funcional — produção em Vercel · CI deploy success (215acd52) · Playwright VRT success (2ª rodada)
+- **Testes:** 269/269 passando (validado 30/08 12:47 WSL pnpm test:run)
 - **Lint:** 0 errors, 0 warnings
+- **i18n EN em produção (30/08):** Hero, Contato, ConsultingButton, MissionClock (dict), Termos/Privacidade ✅ E2E real
+- **CDN imagens:** same-origin (Vercel) — img.seu.pet removido do CSP (dead code)
+
+### Sessão 05/09 — Revert V5 (aplicado via merge) + fix copyright footer
+- **merge** do remote: Revert "Merge PR #72" (4dd1a99, 03:55 outra máquina) — V5 resume-tailor desfeito; fix copyright (ec2fc76) preservado no auto-merge, sem conflitos
+- **fix(ui)** (ec2fc76): copyright duplicado no footer — dicionario ja tem © via JSX Footer (feat #31)
+- Merge sem conflitos · rotas / /contact /projetos 200 · tsc limpo nos arquivos commitados (erros residuais sao scripts debug V5 untracked)
+- 3 commits no dia · push bare+origin OK · HEAD: `1a0a14a`
+
+
+### Sessão 30/08 — i18n audit + bug-hunter v3 (Fase 1) + UI nome/imagens
+- Nome do card: `text-base md:text-lg` + `font-bold` + `var(--accent)` (aprovado Samuel, commit `98dd619`)
+- Imagens: revert CDN `img.seu.pet` → same-origin (causava cards vazios no navegador real por bloqueio de rastreamento)
+- **`scripts/i18n-audit.mjs` (NOVO):** scanner estático de strings hardcoded (98 arquivos, 3 categorias: hardcoded-jsx, raw-description, attr-aria-label). Relatório em `docs/agents/qualidade/bug-hunter/findings/i18n-audit-*.json`. Uso: `node scripts/i18n-audit.mjs`
+- **`scripts/bug-hunter.mjs` ampliado:** escuta `pageerror` (hydration #418), `requestfailed`, e check de `brokenImages` (naturalWidth=0)
+- i18n localizados (PT/EN): ContactForm, LazyContactForm, BuyMeACoffee, ErrorBoundary (`ErrorBoundaryWithI18n` wrapper), termos/privacidade h1, ConsultingButton, StripeConsulting, MpConsultingButton, MissionClock
+- **Intencional PT-only (NÃO localizar):** MiniGames, API routes (emails), AdSense "Anúncio" (label anúncio obrigatório), `item.description` de dados (ProfileSection/GameShowcase)
 - **URL:** https://samuelmedeiros.vercel.app
 
+
+## Sessão 2026-08-28 — Capas PIL dos projetos
+
+- **feat(projects)**: capas PIL 1280×720 para DogWalk/Arachne/Portifólio/LifeLog — gradientes + padrões geométricos (círculos/hex/grade) + glows (`ec33a5e` na master)
+- **fix**: DogWalk usava `seu.pet.gif` quebrado (800×600) → `seu.pet.webp` (1280×720); GIF removido
+
+## Sessão 2026-08-29 — Capas AI padrão LifeLog (APROVADAS por Samuel)
+
+- **feat(projects)**: capas AI no **padrão LifeLog** (Worker Cloudflare FLUX.1 Schnell) para Arachne/Portifólio/LifeLog — aprovadas visualmente por Samuel em 29/08, commit `d151456` na master
+  - **Arachne** `arachne.webp` — teias vermelhas neon (nova marca `#ff3b3b`; NUNCA roxo)
+  - **Portifólio** `portifolio.webp` — holograma neon (opção B: interface holográfica azul/roxa flutuante, sem texto)
+  - **LifeLog** `lifelog.webp` — livro azul (não rosa/magenta)
+  - **Dogwalk** NÃO tem capa AI — card usa GIF scroll real (`seu-pet-scroll.mp4`)
+- **Workflow**: prompts na skill `portfolio-covers-ai` (estrutura `Digital artwork. <tema>. Wide cinematic shot. Mood. Color palette. No text/watermark`) → Worker FLUX (JPEG 1024x1024) → crop centro 16:9 → resize 1280x720 → WebP q90 → preview PNG no Telegram → aprovação Samuel → commit cirúrgico + push → validar 200 no ar
+- **Fórmula reutilizável**: skill `portfolio-covers-ai` (categoria frontend) — usar ao regenerar capas
+- Iterações rejeitadas por Samuel: v3 clara (Péssimo), v4/v5 dark, v6 NIM, página com textos, wireframe, site flutuante claro, laptop — o que ele quer é cena CONCRETA/holograma
+
+## Sessão 2026-08-25 (fim de dia) — View Transition circular restaurada
+- **feat(theme)**: restaura View Transition circular no toggle de tema + botoes icon-only (`91dd9c5`)
+- **fix(theme)**: flushSync no startViewTransition + origem do circulo no clique (`58ba720`)
+- 2 commits no dia · push bare+origin OK · HEAD: `58ba720`
+- ⚠️ **Pendência**: working tree sujo — AGENTS.md/HISTORY.md, playwright-report, snapshots PNG, findings bug-hunter 17-25/08, scripts prod-*.mjs (31 arquivos) — commitados no fim de dia
 
 ## Sessão 2026-08-14 (manhã) — Merge dos 3 PRs dependabot + README dual-língua
 - **chore(deps)**: merge dos 3 PRs dependabot (rebase local + force-push + squash via API):
