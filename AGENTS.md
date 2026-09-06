@@ -31,6 +31,13 @@ Sem evidência real (testes + screenshot + nota + PDF entregue) NÃO é entrega 
 - **i18n EN em produção (30/08):** Hero, Contato, ConsultingButton, MissionClock (dict), Termos/Privacidade ✅ E2E real
 - **CDN imagens:** same-origin (Vercel) — img.seu.pet removido do CSP (dead code)
 
+### Sessão 05/09 — Revert V5 (aplicado via merge) + fix copyright footer
+- **merge** do remote: Revert "Merge PR #72" (4dd1a99, 03:55 outra máquina) — V5 resume-tailor desfeito; fix copyright (ec2fc76) preservado no auto-merge, sem conflitos
+- **fix(ui)** (ec2fc76): copyright duplicado no footer — dicionario ja tem © via JSX Footer (feat #31)
+- Merge sem conflitos · rotas / /contact /projetos 200 · tsc limpo nos arquivos commitados (erros residuais sao scripts debug V5 untracked)
+- 3 commits no dia · push bare+origin OK · HEAD: `1a0a14a`
+
+
 ### Sessão 30/08 — i18n audit + bug-hunter v3 (Fase 1) + UI nome/imagens
 - Nome do card: `text-base md:text-lg` + `font-bold` + `var(--accent)` (aprovado Samuel, commit `98dd619`)
 - Imagens: revert CDN `img.seu.pet` → same-origin (causava cards vazios no navegador real por bloqueio de rastreamento)
